@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "rhythms": {
+      "type": "http",
+      "url": "https://mcpservers.rhythms.ai/rhythms/mcp"
+    }
+  }
+}

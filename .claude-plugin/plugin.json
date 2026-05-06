@@ -1,0 +1,19 @@
+{
+  "name": "rhythms",
+  "version": "0.1.0",
+  "description": "Work with goals, documents, layouts, views, teams, and organizational knowledge in Rhythms from Claude Code.",
+  "author": {
+    "name": "Rhythms"
+  },
+  "homepage": "https://www.gotorhythms.ai",
+  "keywords": [
+    "rhythms",
+    "okr",
+    "goals",
+    "documents",
+    "mcp",
+    "productivity"
+  ],
+  "mcpServers": "./.mcp.json",
+  "repository": "https://github.com/GetRhythms/rhythms-claude-plugin"
+}
