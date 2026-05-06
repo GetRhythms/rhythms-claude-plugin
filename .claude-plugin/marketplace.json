@@ -1,0 +1,14 @@
+{
+  "name": "rhythms-marketplace",
+  "description": "Claude Code marketplace for Rhythms.",
+  "owner": {
+    "name": "Rhythms"
+  },
+  "plugins": [
+    {
+      "name": "rhythms",
+      "description": "Rhythms Claude plugin for working with goals, documents, layouts, views, teams, users, and organizational knowledge from Claude Code.",
+      "source": "./plugins/rhythms"
+    }
+  ]
+}

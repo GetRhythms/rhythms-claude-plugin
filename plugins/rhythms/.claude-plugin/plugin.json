@@ -1,6 +1,6 @@
 {
   "name": "rhythms",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "description": "Work with goals, documents, layouts, views, teams, and organizational knowledge in Rhythms from Claude Code.",
   "author": {
     "name": "Rhythms"
