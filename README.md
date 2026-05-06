@@ -13,7 +13,7 @@ claude plugin marketplace add GetRhythms/rhythms-claude-plugin
 ## Install the plugin
 
 ```bash
-claude plugin install rhythms@rhythms-marketplace
+claude plugin install rhythms@rhythms
 ```
 
 ## Verify installation
