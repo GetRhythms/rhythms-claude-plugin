@@ -8,15 +8,15 @@ The plugin connects Claude Code to the Rhythms usprod MCP server at `https://mcp
 
 - A Claude Code plugin manifest in `.claude-plugin/plugin.json`
 - A root `.mcp.json` for the Rhythms MCP server connection
-- Workflow skills for setup, onboarding, search, goal creation, goal management, goal check-ins, document editing, import, insights, scheduled tasks, and Rhythms-specific guidance
+- Workflow skills for setup, onboarding, search, goal creation, goal management, goal check-ins, document editing, knowledge search, and Rhythms-specific guidance
 - Command entry points for common search, goal creation, check-in, and goal-management flows
 
 ## Install locally from a checkout
 
-If you have this repository checked out locally, run:
+If you have this marketplace repository checked out locally, run:
 
 ```bash
-claude --plugin-dir /absolute/path/to/this/repository
+claude --plugin-dir /absolute/path/to/this/repository/plugins/rhythms
 ```
 
 Then inside Claude Code:
@@ -55,9 +55,6 @@ You should see a plugin-provided server named `rhythms`.
 - `/rhythms:goal-checkin`
 - `/rhythms:document-editing`
 - `/rhythms:knowledge-search`
-- `/rhythms:import`
-- `/rhythms:insights`
-- `/rhythms:scheduled-tasks`
 
 ## Notes
 

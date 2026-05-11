@@ -1,11 +1,11 @@
 ---
 name: setup
-description: Verify the Rhythms plugin is loaded and troubleshoot hosted Rhythms MCP connection issues. Use when the user wants to test the plugin against the dev1 Rhythms MCP server, confirm the Rhythms MCP server is visible, or debug missing Rhythms tools after installing or reloading the plugin.
+description: Verify the Rhythms plugin is loaded and troubleshoot hosted Rhythms MCP connection issues. Use when the user wants to test the plugin against its configured Rhythms MCP server, confirm the Rhythms MCP server is visible, or debug missing Rhythms tools after installing or reloading the plugin.
 ---
 
 # Rhythms Plugin Setup
 
-Use this skill to verify that the Rhythms Claude plugin is connected correctly to the hosted dev1 Rhythms MCP environment.
+Use this skill to verify that the Rhythms Claude plugin is connected correctly to its configured hosted Rhythms MCP environment.
 
 ## Goal
 
@@ -17,9 +17,7 @@ Confirm three things in order:
 
 ## Hosted endpoint
 
-This plugin package is wired to:
-
-`https://mcpservers.gotorhythms.ai/rhythms/mcp`
+The plugin package is wired through `.mcp.json`. Treat that file as the source of truth for the hosted MCP endpoint.
 
 ## Setup flow
 
@@ -51,8 +49,8 @@ Treat this as a server reachability or auth problem.
 
 Guide the user to verify:
 
-- the hosted dev1 server is the intended environment for this test
-- `https://mcpservers.gotorhythms.ai/rhythms/mcp` is the configured endpoint
+- the hosted server in `.mcp.json` is the intended environment for this test
+- the configured endpoint in `.mcp.json` matches the environment the user expects
 - Rhythms MCP authentication prerequisites are configured for that hosted environment
 
 ### 4. If the server is connected
