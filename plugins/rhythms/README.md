@@ -55,6 +55,7 @@ You should see a plugin-provided server named `rhythms`.
 - `/rhythms:goal-checkin`
 - `/rhythms:document-editing`
 - `/rhythms:knowledge-search`
+- `/rhythms:rhythms-intelligence`
 
 ## Notes
 
