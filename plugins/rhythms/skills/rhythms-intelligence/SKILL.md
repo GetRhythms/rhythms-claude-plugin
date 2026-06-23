@@ -186,6 +186,37 @@ Compose them — each call is cheap, structured, and tenant-scoped.
 | "How is X going?" / "What's going on with X?" / "Where do we stand on X?" (multi-section answer) | `intelligence_mint_document` (after using the lookups to gather context) |
 | "Write me a brief / recap / summary / register built from what we know" | `intelligence_mint_document` |
 
+## Research strategy: fan out vs drill down
+
+Match the shape of your lookups to the shape of the question. The lookups compose
+cheaply, so the cost of getting this wrong is a slow, padded answer — not a failure —
+but matching well gets you to a grounded answer in the fewest calls.
+
+**Fan out** when the question is broad or open-ended — a status rollup, a risk
+register, "what's going on with X", "what should we focus on", anything spanning
+multiple entities or whose scope you don't yet know:
+
+1. Resolve the main anchors with `intelligence_lookup_entities` (often several names
+   at once).
+2. Gather breadth across them **in parallel** — `intelligence_lookup_facts` and
+   `intelligence_lookup_related` on each anchor in the same batch — before you narrow.
+3. Let the breadth surface the threads that matter, then drill into those.
+
+**Drill down** when the question is specific and points at one thing — "who owns Y",
+"why did we decide Z", "what's the status of ticket Q":
+
+1. Resolve the single anchor with `intelligence_lookup_entities`.
+2. Go straight to the relevant edges with `intelligence_lookup_facts`
+   (`focal_entity_uuids` set to the anchor).
+3. Pull `intelligence_lookup_evidence` only when the user needs the "why" or a
+   quotable primary source.
+
+Always **chain uuids forward**: feed the uuid from `intelligence_lookup_entities` into
+the `*_facts` / `*_related` / `*_evidence` calls — never guess a uuid. Stop as soon as
+you can answer; redundant lookups slow the turn without improving the answer. If the
+graph genuinely has little on the topic, say so plainly rather than padding with more
+speculative lookups.
+
 ## Mint proactively, not just on request
 
 Mint whenever your reply would itself be a synthesised, multi-section artifact —
