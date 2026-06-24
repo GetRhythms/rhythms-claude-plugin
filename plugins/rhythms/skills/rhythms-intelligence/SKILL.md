@@ -137,6 +137,110 @@ one mint:
 - `intelligence_mint_document` — synthesise a shareable markdown document grounded in
   the graph.
 
+## Retrieving well — the graph is memory, not the source of truth
+
+The graph is a fast, tenant-wide **index of what we've learned** — decisions, owners,
+risks, history, provenance. It is not guaranteed to be current, complete, or
+unambiguous. A great answer treats a lookup as the *start* of an investigation, not the
+end:
+
+1. **Orient** — resolve the anchors and read the immediate relationships.
+2. **Drill** — follow the references the first results expose; a fact almost always
+   points at another entity worth opening.
+3. **Verify** — for anything whose truth changes over time, confirm the live state at
+   the source before you commit to it.
+4. **Shape** — lead with the durable answer, mark how fresh it is, and cite where it
+   came from.
+
+### Drill down — follow the chain, don't stop at hop 1
+
+The value of the graph is its edges. A single lookup rarely answers a real question; the
+first result names the *next* thing to open. Keep going until the question is answered
+or the neighbourhood is exhausted — a few hops is normal; stop when new lookups stop
+adding relevant entities.
+
+- A decision often references an artifact ("we agreed to open a Jira RCA") → resolve and
+  open that work item; don't report the decision without its follow-through.
+- A risk points at the initiative that mitigates it → open the initiative → its owner →
+  its latest status.
+- "Who's accountable for X end to end" walks ownership up the chain: initiative → parent
+  goal → owner → manager.
+- An action item names an owner → open the owner to see their other commitments when the
+  question is about load or follow-through.
+
+Chain uuids forward at every hop (resolve a name once, then anchor `*_facts` /
+`*_related` / `*_evidence` on its uuid). Issue independent drills in parallel; chain only
+when a later call depends on an earlier result.
+
+### Verify against the source when the answer can go stale
+
+The graph lags reality. Before you state a fact whose truth **changes over time**, decide
+whether to confirm it live:
+
+- **Volatile — verify at the source when you can:** open/closed status, current
+  owner/assignee, progress numbers / metric values / KR attainment, due dates and
+  timelines, "is it done yet", "what's the latest".
+- **Durable — trust the graph:** who built or decided something, history, what happened
+  in a past meeting, prior context and rationale, relationships that don't expire.
+
+How to decide and act:
+
+- Read the freshness signal on the result — an entity's `last_seen`, a fact's `valid_at`.
+  If it's old relative to the question and the field is volatile, treat the graph value
+  as a lead, not the answer.
+- If the entity carries a source pointer (`source_system` + `external_id`, e.g. a
+  Linear/Jira work item) **and you have a connected tool that can look it up** (by its
+  `external_id`, or by the source `url` you can read from `intelligence_lookup_evidence`),
+  fetch the current state from that source, then answer with both ("graph had it open as
+  of May 3; confirmed in Jira just now — closed").
+- If you can't verify (no connection, no access), answer from the graph but **timestamp
+  it explicitly** ("as of <date>, per our memory") and offer to check the source. Never
+  present a stale volatile fact as present-tense truth.
+- `intelligence_lookup_evidence` returns the underlying episode; its `content` carries
+  the source `url` / `external_id`, which is how you locate the live record to verify.
+
+### Disambiguate before you answer
+
+- **Same name, different people.** If a name resolves to more than one Person (two
+  "Hasan"s), don't default to the most recently-active one. Separate them by team / role
+  / what they actually work on, and either answer per-person or ask which one. Surfacing
+  the wrong same-named person is worse than asking.
+- **Same word, different things.** A topic like "email notifications" can span distinct
+  surfaces (product notifications vs marketing/webinar email vs growth nudges vs an
+  inbound mail connector). When the results split across surfaces, separate them rather
+  than blending them into one cloud — or ask which surface the user means.
+- **Aliases / acronyms** (MBR, ELR, QBR, RCA) → resolve to the specific entity or series;
+  don't guess.
+- **First person** ("my", "our", "who do I report to") → resolve to the caller's own
+  Person / Team first, then anchor on it.
+
+### Be complete on "all of X" questions
+
+"Who owns X", "list everyone who touched Y", "all the risks to Z" are *completeness*
+questions, not best-match questions. Don't stop at the first page of
+`intelligence_lookup_facts` — anchor on the entity and use `intelligence_lookup_related`
+to enumerate the full neighbourhood, raise the `limit`, and if results are still capped,
+say the list may be partial rather than presenting a truncated set as the whole.
+Distinguish **who built / owns it** (durable) from **who's actively touching it now**
+(recent) and give both — leading with recent activity alone is the classic wrong answer.
+A recent contributor is still a contributor: recency orders an enumeration, it never
+filters it — never drop someone from a "who all / list everyone" answer just because
+their work is newer.
+
+### Ground every non-trivial claim
+
+Prefer structured facts and quoted episodes over paraphrase. When accuracy matters, pull
+`intelligence_lookup_evidence` and cite the source + date. Treat extracted/inferred edges
+as such when you lean on them. If two memories conflict, surface both with their dates and
+provenance rather than silently choosing one.
+
+### Shape the answer
+
+Lead with the durable, authoritative answer; then recent activity as separate context;
+then the source and as-of date; then your confidence and any gap ("the graph has nothing
+on the marketing side — want me to check the campaign tool?"). "Nothing in the graph" is
+not "doesn't exist" — say which it is and where to look next.
+
 ## Looking up before acting
 
 ### Graph context sweep
